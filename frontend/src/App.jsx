@@ -7,77 +7,92 @@ import SignUp from "./pages/signUp.jsx";
 import EditPost from "./pages/edit";
 
 function AppRoutes() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+	const [currentUser, setCurrentUser] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
-  // 1. Check if user is already logged in when the React app loads
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/me", {
-          credentials: "include", 
-        });
-        const data = await res.json();
-        if (data.user) {
-          setCurrentUser(data.user);
-        }
-      } catch (err) {
-        console.error("Error checking session:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+	// Check if user is already logged in
+	useEffect(() => {
+		const checkAuthStatus = async () => {
+			try {
+				const res = await fetch("http://localhost:5000/api/me", {
+					credentials: "include",
+				});
+				const data = await res.json();
+				if (data.user) {
+					setCurrentUser(data.user);
+				}
+			} catch (err) {
+				console.error("Error checking session:", err);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-    checkAuthStatus();
-  }, []);
+		checkAuthStatus();
+	}, []);
 
-  // 2. Handle Sign Out 
-  const handleSignOut = async () => {
-    try {
-      await fetch("http://localhost:5000/api/signout", {
-        method: "POST",
-        credentials: "include",
-      });
-      setCurrentUser(null);
-      navigate("/signin");
-    } catch (err) {
-      console.error("Sign out error:", err);
-    }
-  };
+	// Handle Sign Out
+	const handleSignOut = async () => {
+		try {
+			await fetch("http://localhost:5000/api/signout", {
+				method: "POST",
+				credentials: "include",
+			});
+			setCurrentUser(null);
+			navigate("/signin");
+		} catch (err) {
+			console.error("Sign out error:", err);
+		}
+	};
 
-  if (loading) {
-    return <div className="text-center py-5">Loading DevBlog...</div>;
-  }
+	if (loading) {
+		return <div className="text-center py-5">Loading DevBlog...</div>;
+	}
 
-  return (
-    <Routes>
-      {/* Parent route renders persistent Navbar and Footer via Layout */}
-      <Route
-        path="/"
-        element={
-          <Layout currentUser={currentUser} onSignOut={handleSignOut} />
-        }
-      >
-        <Route index element={<Home currentUser={currentUser} />} />
-        <Route
-          path="signin"
-          element={<SignIn setCurrentUser={setCurrentUser} />}
-        />
-        <Route
-          path="signup"
-          element={<SignUp setCurrentUser={setCurrentUser} />}
-        />
-        <Route path="posts/:id/edit" element={<EditPost />} />
-      </Route>
-    </Routes>
-  );
+	return (
+		<Routes>
+			<Route
+				path="/"
+				element={
+					<Layout
+						currentUser={currentUser}
+						onSignOut={handleSignOut}
+					/>
+				}
+			>
+				{/* Localhost:5173/ -> Home Feed & Create Form */}
+				<Route
+					index
+					element={<Home currentUser={currentUser} />}
+				/>
+
+				{/* Localhost:5173/signin -> Login Form */}
+				<Route
+					path="signin"
+					element={<SignIn setCurrentUser={setCurrentUser} />}
+				/>
+
+				{/* Localhost:5173/signup -> Registration Form */}
+				<Route
+					path="signup"
+					element={<SignUp setCurrentUser={setCurrentUser} />}
+				/>
+
+				{/* Localhost:5173/posts/12/edit -> Edit Post Page */}
+				<Route
+					path="posts/:id/edit"
+					element={<EditPost />}
+				/>
+			</Route>
+		</Routes>
+	);
 }
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<AppRoutes />
+		</BrowserRouter>
+	);
 }
