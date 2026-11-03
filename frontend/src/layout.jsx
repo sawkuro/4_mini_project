@@ -54,8 +54,8 @@ export default function Layout({ currentUser, onSignOut }) {
 			<footer className="bg-dark text-white text-center py-3 mt-auto">
 				<div className="container">
 					<small>
-						&copy; {new Date().getFullYear()} CS-312 Mini Project 3. Built with
-						React & Express.
+						&copy; {new Date().getFullYear()} CS-312 Mini Project 4: React
+						Frontend.
 					</small>
 				</div>
 			</footer>
