@@ -73,13 +73,13 @@ function AppRoutes() {
 					element={<SignIn setCurrentUser={setCurrentUser} />}
 				/>
 
-				{/* Localhost:5173/signup -> Registration Form */}
+				{/* Localhost:5173/signup -> signup Form */}
 				<Route
 					path="signup"
 					element={<SignUp setCurrentUser={setCurrentUser} />}
 				/>
 
-				{/* Localhost:5173/posts/12/edit -> Edit Post Page */}
+				{/* Localhost:5173/posts/12/edit -> Edit page */}
 				<Route
 					path="posts/:id/edit"
 					element={<EditPost />}
